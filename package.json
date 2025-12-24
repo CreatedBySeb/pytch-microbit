@@ -7,6 +7,7 @@
     "lint": "eslint src --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@microbit/microbit-fs": "^0.10.0"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
