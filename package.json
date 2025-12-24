@@ -7,7 +7,9 @@
     "lint": "eslint src --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
-    "@microbit/microbit-fs": "^0.10.0"
+    "@microbit/microbit-fs": "^0.10.0",
+    "dapjs": "^2.3.0",
+    "usb": "^2.16.0"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",

@@ -2,6 +2,7 @@ import { MicropythonFsHex } from "@microbit/microbit-fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { cwd } from "node:process";
+import { BoardVersion, getBuildOutputDir, getHexPath } from "./shared";
 
 const V1_REPO = "bbcmicrobit/micropython";
 const V2_REPO = "microbit-foundation/micropython-microbit-v2";
@@ -46,10 +47,10 @@ async function main() {
 	console.log("- Assembled hex files for V1 and V2 boards");
 
 	console.log("- Writing hex files to disk...");
-	const outPath = resolve(cwd(), "build");
+	const outPath = getBuildOutputDir();
 	await mkdir(outPath, { recursive: true }); // Ensure output dir exists
 	await Promise.all([v1Hex, v2Hex].map((hex, i) => {
-		return writeFile(outPath + `/pytch-microbit-v${i + 1}.hex`, hex);
+		return writeFile(getHexPath(outPath, i + 1 as BoardVersion), hex);
 	}));
 	console.log("- Wrote hex files to " + outPath);
 
