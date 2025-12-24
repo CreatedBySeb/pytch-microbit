@@ -92,8 +92,15 @@ async function main() {
             });
     });
 
-    console.log("Starting polling loop, CTRL+C to exit...")
-    interval = setInterval(() => pollDevices(context), POLL_INTERVAL);
+    const once = process.argv.includes("--once");
+
+    if (once) {
+        console.log("'--once' specified, only flashing attached devices");
+        pollDevices(context);
+    } else {
+        console.log("Starting polling loop, CTRL+C to exit...")
+        interval = setInterval(() => pollDevices(context), POLL_INTERVAL);
+    }
 }
 
 if (require.main === module) {
