@@ -1,3 +1,3 @@
-from pytch import *
+import pytch
 
-say("Hi from V2!")
+pytch.run()
