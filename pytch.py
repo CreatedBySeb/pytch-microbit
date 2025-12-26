@@ -9,12 +9,37 @@ VER = "0.1"
 _read_buf = ""
 
 
+def var_accel():
+    return accelerometer.get_values()
+
+
 def var_buttons():
     return [button_a.is_pressed(), button_b.is_pressed()]
 
 
+def var_gesture():
+    return [accelerometer.current_gesture()]
+
+
+def var_light():
+    return [display.read_light_level()]
+
+
+def var_pins():
+    return [pin0.read_digital(), pin1.read_digital(), pin2.read_digital()]
+
+
+def var_temp():
+    return [temperature()]
+
+
 BASE_VARS = {
+    "accel": var_accel,
     "buttons": var_buttons,
+    "gesture": var_gesture,
+    "light": var_light,
+    "pins": var_pins,
+    "temp": var_temp,
 }
 
 
