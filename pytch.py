@@ -42,6 +42,10 @@ BASE_HANDLERS = {
 }
 
 
+def str_err(e):
+    return repr(type(e)).split("'", 3)[1]
+
+
 def read():
     global _read_buf
 
@@ -49,7 +53,7 @@ def read():
         message = uart.readline()
 
         if message:
-            _read_buf += message.decode()
+            _read_buf += str(message, "utf-8")
 
         if _read_buf[-1] in (ENDL, "\r"):
             args = _read_buf.strip().split(SEP)
@@ -77,7 +81,7 @@ def handle_cmd(handlers, cmd, args):
 
         results = handler(args) or []
     except Exception as e:
-        send("err", [type(e).__name__, e.args[0]])
+        send("err", [str_err(e), e.args[0]])
     else:
         send("ok", results)
 

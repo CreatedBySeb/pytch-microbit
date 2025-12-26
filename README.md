@@ -16,6 +16,16 @@ possible to build a universal hex file compatible with both boards, the code
 required to implement all of the V2 features runs into the limitations of the
 V1 boards, so splitting them in this way is necessary.
 
+### MicroPython Gotchas
+
+There are some aspects of MicroPython that deviate from typical/standard Python
+behaviour, with MicroPython for the V1 revision having more abnormalities. Some
+of these are documented here:
+
+- `type` objects do not have `__name__`, can re-create by parsing output of
+    repr (V1 only)
+- `bytes` does not have the `decode` method, use `str(b, "utf-8")` (V1 only)
+
 ## Scripts
 
 This repository contains some Node.js scripts, based on the v20 'Iron' LTS
