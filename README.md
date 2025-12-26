@@ -65,3 +65,9 @@ This script scans for micro:bit devices continuously and attempts to flash them
 with the correct hex file using DAPLink via the `dapjs` package, similar to the
 micro:bit Python IDE. Passing the `--once` flag only flashes the currently
 connected devices rather than continuing to scan.
+
+## Known Issues
+
+1. With basic commands implemented, the firmware no longer starts on V1 due to
+    `MemoryError` when parsing `pytch.py`. Initial attempts to minify the file
+    and increase optimisation level did not help.

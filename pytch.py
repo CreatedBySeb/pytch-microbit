@@ -1,15 +1,24 @@
 from microbit import *
+import music
 import os
 
 BAUD = 115200
+BR_RANGE = range(9)
 ENDL = "\n"
 SEP = "|"
 PINS = (pin0, pin1, pin2)
+PIX_RANGE = range(5)
 VER = "0.1"
 
 _gesture = ""
 _pin_states = [0 for _ in PINS]
 _read_buf = ""
+
+
+def wait_loop(args):
+    wait = len(args) > 1 and args[1] == "True"
+    loop = len(args) > 2 and args[2] == "True"
+    return wait, loop
 
 
 def var_accel():
@@ -46,15 +55,58 @@ BASE_VARS = {
 }
 
 
+def cmd_clear(_):
+    display.show("", loop=False)
+    display.clear()
+
+
 def cmd_hello(_):
     uname = os.uname()
     return ["microbit", uname.release, VER]
 
 
-def cmd_var(args):
-    if not args:
-        raise TypeError("No variable name provided")
+def cmd_pixel(args):
+    if len(args) < 3:
+        args.push(9)
 
+    display.set_pixel(*[int(a) for a in args])
+
+
+def cmd_play_music(args):
+    wait, loop = wait_loop(args)
+
+    if hasattr(music, args[0]):
+        song = getattr(music, args[0])
+    else:
+        song = args[0]
+
+    music.play(song, wait=wait, loop=loop)
+
+
+def cmd_scroll(args):
+    wait, loop = wait_loop(args)
+    display.scroll(args[0], wait=wait, loop=loop)
+
+
+def cmd_show_img(args):
+    if hasattr(Image, args[0]):
+        img = getattr(Image, args[0])
+    else:
+        img = Image(args[0])
+
+    display.show(img)
+
+
+def cmd_show_text(args):
+    wait, loop = wait_loop(args)
+    display.show(args[0], wait=wait, loop=loop)
+
+
+def cmd_stop_music(_):
+    music.stop()
+
+
+def cmd_var(args):
     name = args[0]
     handler = BASE_VARS.get(name)
 
@@ -64,9 +116,21 @@ def cmd_var(args):
     return handler()
 
 
+def cmd_write_d(args):
+    PINS[int(args[0])].write_digital(int(args[1]))
+
+
 BASE_HANDLERS = {
+    "clear": cmd_clear,
     "hello": cmd_hello,
+    "pixel": cmd_pixel,
+    "play_music": cmd_play_music,
+    "scroll": cmd_scroll,
+    "show_img": cmd_show_img,
+    "show_text": cmd_show_text,
+    "stop_music": cmd_stop_music,
     "var": cmd_var,
+    "write_d": cmd_write_d,
 }
 
 
@@ -123,11 +187,17 @@ def emit_events():
     if button_b.was_pressed():
         send("button", ["b"])
 
-    new_pins = [p.read_digital() for p in PINS]
     for i in range(0, len(PINS)):
-        if new_pins[i] != _pin_states[i]:
-            send("pin", [i, new_pins[i]])
-            _pin_states[i] = new_pins[i]
+        try:
+            val = PINS[i].read_digital()
+        except ValueError:
+            if i != 0:
+                raise
+            continue
+
+        if val != _pin_states[i]:
+            send("pin", [i, val])
+            _pin_states[i] = val
 
     new_gesture = accelerometer.current_gesture()
     if new_gesture != _gesture and new_gesture:
