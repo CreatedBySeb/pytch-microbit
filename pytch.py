@@ -4,8 +4,11 @@ import os
 BAUD = 115200
 ENDL = "\n"
 SEP = "|"
+PINS = (pin0, pin1, pin2)
 VER = "0.1"
 
+_gesture = ""
+_pin_states = [0 for _ in PINS]
 _read_buf = ""
 
 
@@ -18,7 +21,7 @@ def var_buttons():
 
 
 def var_gesture():
-    return [accelerometer.current_gesture()]
+    return [_gesture]
 
 
 def var_light():
@@ -26,7 +29,7 @@ def var_light():
 
 
 def var_pins():
-    return [pin0.read_digital(), pin1.read_digital(), pin2.read_digital()]
+    return _pin_states
 
 
 def var_temp():
@@ -58,7 +61,7 @@ def cmd_var(args):
     if not handler:
         raise ValueError("Unknown variable name '" + name + "'")
 
-    return [str(v) for v in handler()]
+    return handler()
 
 
 BASE_HANDLERS = {
@@ -91,7 +94,7 @@ def read():
 
 def send(event, args):
     args.insert(0, event)
-    uart.write(SEP.join(args) + ENDL)
+    uart.write(SEP.join(str(a) for a in args) + ENDL)
 
 
 def handle_cmd(handlers, cmd, args):
@@ -112,11 +115,24 @@ def handle_cmd(handlers, cmd, args):
 
 
 def emit_events():
+    global _gesture, _pin_states
+
     if button_a.was_pressed():
         send("button", ["a"])
 
     if button_b.was_pressed():
         send("button", ["b"])
+
+    new_pins = [p.read_digital() for p in PINS]
+    for i in range(0, len(PINS)):
+        if new_pins[i] != _pin_states[i]:
+            send("pin", [i, new_pins[i]])
+            _pin_states[i] = new_pins[i]
+
+    new_gesture = accelerometer.current_gesture()
+    if new_gesture != _gesture and new_gesture:
+        send("gesture", [new_gesture])
+        _gesture = new_gesture
 
 
 def run(handlers=None, event_emitter=emit_events):

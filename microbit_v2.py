@@ -1,6 +1,9 @@
 from microbit import *
 import pytch
 
+_logo_state = False
+_sound = SoundEvent.QUIET
+
 
 def var_buttons():
     return [button_a.is_pressed(), button_b.is_pressed(), pin_logo.is_touched()]
@@ -36,4 +39,23 @@ cmd_handlers = {
     "var": cmd_var,
 }
 
-pytch.run(cmd_handlers)
+
+def emit_events():
+    global _logo_state, _sound
+
+    logo_state = pin_logo.is_touched()
+    if logo_state != _logo_state:
+        if logo_state:
+            pytch.send("button", ["logo"])
+
+        _logo_state = logo_state
+
+    new_sound = microphone.current_event()
+    if new_sound != _sound:
+        pytch.send("sound", ["loud" if new_sound == SoundEvent.LOUD else "quiet"])
+        _sound = new_sound
+
+    pytch.emit_events()
+
+
+pytch.run(cmd_handlers, emit_events)

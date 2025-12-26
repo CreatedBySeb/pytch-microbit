@@ -43,6 +43,8 @@ of these are documented here:
 - `type` objects do not have `__name__`, can re-create by parsing output of
     repr (V1 only)
 - `bytes` does not have the `decode` method, use `str(b, "utf-8")` (V1 only)
+- Sometimes `microbit.accelerometer.current_gesture()` returns `''`, do a
+    truthy check to avoid exposing it (V1 only)
 
 ## Scripts
 
@@ -63,8 +65,3 @@ This script scans for micro:bit devices continuously and attempts to flash them
 with the correct hex file using DAPLink via the `dapjs` package, similar to the
 micro:bit Python IDE. Passing the `--once` flag only flashes the currently
 connected devices rather than continuing to scan.
-
-## Known Issues
-
-1. On V1 boards, the `gesture` variable only outputs `''`, this should be
-    resolvable once the accelerometer events are implemented
