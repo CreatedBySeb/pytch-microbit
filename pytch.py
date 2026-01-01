@@ -83,6 +83,11 @@ def cmd_play_music(args):
     music.play(song, wait=wait, loop=loop)
 
 
+def cmd_reset(_):
+    cmd_stop_music([])
+    cmd_clear([])
+
+
 def cmd_scroll(args):
     wait, loop = wait_loop(args)
     display.scroll(args[0], wait=wait, loop=loop)
@@ -125,6 +130,7 @@ BASE_HANDLERS = {
     "hello": cmd_hello,
     "pixel": cmd_pixel,
     "play_music": cmd_play_music,
+    "reset": cmd_reset,
     "scroll": cmd_scroll,
     "show_img": cmd_show_img,
     "show_text": cmd_show_text,
