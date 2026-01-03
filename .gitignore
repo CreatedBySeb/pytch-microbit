@@ -26,3 +26,7 @@ yarn-error.log*
 
 # editor backups
 *~
+
+# Deployment layer build artifacts
+website-layer/layer-content/
+website-layer/layer.zip

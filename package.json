@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build:scripts && npm run build:hex",
+    "build:hex": "node ./dist/build.js",
+    "build:scripts": "tsc",
     "lint": "eslint src --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
