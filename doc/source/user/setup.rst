@@ -58,3 +58,16 @@ If you do need to disconnect your micro:bit, there are two different options.
 time you load a project the micro:bit will be reconnected automatically.
 'Forget' disconnected the micro:bit from Pytch until you manually re-add it
 by following the previous instructions.
+
+
+Updating a micro:bit
+--------------------
+
+If a micro:bit has an old version of the Pytch software on it, then it will
+display a yellow 'Needs Update' bubble next to it, like in the image below. The
+micro:bit may still work with Pytch without an update, but to ensure all
+features work as expected, you should click the yellow 'Flash' button to update
+the Pytch software.
+
+.. image:: microbit-needs-update.png
+   :alt: A micro:bit with a 'Needs Update' bubble
