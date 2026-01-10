@@ -6,3 +6,5 @@ your Pytch programs.
 
 .. toctree::
    :maxdepth: 1
+
+   setup
