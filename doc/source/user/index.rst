@@ -8,3 +8,4 @@ your Pytch programs.
    :maxdepth: 1
 
    setup
+   usage
