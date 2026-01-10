@@ -9,3 +9,4 @@ your Pytch programs.
 
    setup
    usage
+   troubleshooting
