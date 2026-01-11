@@ -6,6 +6,17 @@ scripts or as one big program, but there are some differences. You can reference
 the full set of functions, hat blocks and variables by expanding the 'micro:bit'
 section of the Help Sidebar on the left side of Pytch in either mode.
 
+The following micro:bit functionality is supported:
+
+* Display (showing images or text, scrolling text, and setting pixels)
+* Buttons (including the micro:bit touch logo)
+* Accelerometer/Gestures
+* Microphone
+* Music
+* Temperature
+* Light Level
+* GPIO (Pins 0, 1 and 2 only)
+
 
 Using with sprites and scripts
 ------------------------------
