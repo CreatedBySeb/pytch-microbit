@@ -1,4 +1,5 @@
 from microbit import *
+import music
 import pytch
 
 _logo_state = False
@@ -22,6 +23,27 @@ var_handlers.update(
 )
 
 
+def cmd_play_music(args):
+    wait = len(args) > 1 and args[1] == "True"
+    loop = len(args) > 2 and args[2] == "True"
+
+    if hasattr(music, args[0]):
+        song = getattr(music, args[0])
+    else:
+        song = args[0]
+
+    music.play(song, wait=wait, loop=loop)
+
+
+def cmd_reset(_):
+    cmd_stop_music([])
+    pytch.cmd_clear([])
+
+
+def cmd_stop_music(_):
+    music.stop()
+
+
 def cmd_var(args):
     if not args:
         raise TypeError("No variable name provided")
@@ -36,6 +58,9 @@ def cmd_var(args):
 
 
 cmd_handlers = {
+    "play_music": cmd_play_music,
+    "reset": cmd_reset,
+    "stop_music": cmd_stop_music,
     "var": cmd_var,
 }
 

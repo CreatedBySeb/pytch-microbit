@@ -69,11 +69,11 @@ The attached micro:bit is not supported
    :alt: The Devices pane with a warning that the micro:bit device is not
          supported by Pytch
 
-Pytch currently only supports V2 micro:bit boards, so this warning will appear
-if the only detected micro:bit is a V1 board. Any V1 boards will also have an
-'Unsupported' bubble next to them. You will need to connect a V2 micro:bit if
-you want to use a micro:bit with Pytch. V2 micro:bit boards have a golden logo
-on the front, and say 'V2' on the bottom right corner of the back of the board.
+Pytch currently only supports V1.5 and V2 micro:bit boards, so this warning will
+appear if the only detected micro:bit is a V1.3 board. These boards will also
+have an 'Unsupported' bubble next to them. You will need to connect a supported
+micro:bit if you want to use a micro:bit with Pytch. The version of the
+micro:bit is in the bottom right corner on the back of the board.
 
 
 .. _unknown:

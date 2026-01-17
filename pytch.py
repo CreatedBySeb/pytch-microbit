@@ -1,57 +1,24 @@
 from microbit import *
-import music
 import os
 
 BAUD = 115200
-BR_RANGE = range(9)
 ENDL = "\n"
 SEP = "|"
 PINS = (pin0, pin1, pin2)
-PIX_RANGE = range(5)
 VER = "0.1"
 
 _gesture = ""
-_pin_states = [0 for _ in PINS]
+_pin_states = [0, 0, 0]
 _read_buf = ""
 
 
-def wait_loop(args):
-    wait = len(args) > 1 and args[1] == "True"
-    loop = len(args) > 2 and args[2] == "True"
-    return wait, loop
-
-
-def var_accel():
-    return accelerometer.get_values()
-
-
-def var_buttons():
-    return [button_a.is_pressed(), button_b.is_pressed()]
-
-
-def var_gesture():
-    return [_gesture]
-
-
-def var_light():
-    return [display.read_light_level()]
-
-
-def var_pins():
-    return _pin_states
-
-
-def var_temp():
-    return [temperature()]
-
-
 BASE_VARS = {
-    "accel": var_accel,
-    "buttons": var_buttons,
-    "gesture": var_gesture,
-    "light": var_light,
-    "pins": var_pins,
-    "temp": var_temp,
+    "accel": lambda: list(accelerometer.get_values()),
+    "buttons": lambda: [button_a.is_pressed(), button_b.is_pressed()],
+    "gesture": lambda: [_gesture],
+    "light": lambda: [display.read_light_level()],
+    "pins": lambda: _pin_states,
+    "temp": lambda: [temperature()],
 }
 
 
@@ -72,24 +39,9 @@ def cmd_pixel(args):
     display.set_pixel(*[int(a) for a in args])
 
 
-def cmd_play_music(args):
-    wait, loop = wait_loop(args)
-
-    if hasattr(music, args[0]):
-        song = getattr(music, args[0])
-    else:
-        song = args[0]
-
-    music.play(song, wait=wait, loop=loop)
-
-
-def cmd_reset(_):
-    cmd_stop_music([])
-    cmd_clear([])
-
-
 def cmd_scroll(args):
-    wait, loop = wait_loop(args)
+    wait = len(args) > 1 and args[1] == "True"
+    loop = len(args) > 2 and args[2] == "True"
     display.scroll(args[0], wait=wait, loop=loop)
 
 
@@ -103,12 +55,9 @@ def cmd_show_img(args):
 
 
 def cmd_show_text(args):
-    wait, loop = wait_loop(args)
+    wait = len(args) > 1 and args[1] == "True"
+    loop = len(args) > 2 and args[2] == "True"
     display.show(args[0], wait=wait, loop=loop)
-
-
-def cmd_stop_music(_):
-    music.stop()
 
 
 def cmd_var(args):
@@ -129,12 +78,10 @@ BASE_HANDLERS = {
     "clear": cmd_clear,
     "hello": cmd_hello,
     "pixel": cmd_pixel,
-    "play_music": cmd_play_music,
-    "reset": cmd_reset,
+    "reset": cmd_clear,
     "scroll": cmd_scroll,
     "show_img": cmd_show_img,
     "show_text": cmd_show_text,
-    "stop_music": cmd_stop_music,
     "var": cmd_var,
     "write_d": cmd_write_d,
 }

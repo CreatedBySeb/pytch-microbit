@@ -1,3 +1,4 @@
+.. _microbit-usage:
 Using the micro:bit in Pytch programs
 =====================================
 
@@ -9,10 +10,10 @@ section of the Help Sidebar on the left side of Pytch in either mode.
 The following micro:bit functionality is supported:
 
 * Display (showing images or text, scrolling text, and setting pixels)
-* Buttons (including the micro:bit touch logo)
+* Buttons (including the micro:bit touch logo for V2 boards)
 * Accelerometer/Gestures
-* Microphone
-* Music
+* Microphone (V2 only)
+* Music (V2 only)
 * Temperature
 * Light Level
 * GPIO (Pins 0, 1 and 2 only)

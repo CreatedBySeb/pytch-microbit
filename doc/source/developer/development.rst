@@ -19,11 +19,13 @@ used by the official micro:bit Python Editor. The ``flash`` script uses
 For the V1 micro:bit, the amount of memory available (16KB) is a significant
 constraint, as the code has to be parsed by the MicroPython interpreter on boot
 and compiled into bytecode. The V2 micro:bit has significantly more memory
-(128KB or 8 times more), and so this is much less of a concern.
+(128KB or 8 times more), and so this is much less of a concern. This is why the
+code in ``pytch.py`` is written more compactly, as it has to be simple enough to
+be parsable on V1 boards.
 
-**The V1 version of the firmware is currently non-functional due to a
-MemoryError on boot, but is still built for development and testing purposes.
-It should not be deployed and used by the IDE in its current state.**
+**The V1 version of the firmware is less well tested than V2 and may encounter
+instability due to the lower memory size, it should be considered a work in
+progress.**
 
 
 Building and flashing
