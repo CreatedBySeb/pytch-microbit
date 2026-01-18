@@ -1,4 +1,4 @@
-import { MicropythonFsHex } from "@microbit/microbit-fs";
+import { MicropythonFsHex, microbitBoardId } from "@microbit/microbit-fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { cwd } from "node:process";
@@ -27,16 +27,16 @@ async function main() {
 	console.log("Running in " + cwd())
 	console.log("Building micro:bit hex files for Pytch...")
 
-	console.log("- Reading Python files...");
-	const paths = ["pytch", "microbit_v1", "microbit_v2"].map((p) => resolve(cwd(), p + ".py"));
-	const [base, v1Py, v2Py] = await Promise.all(paths.map((p) => readFile(p)));
-	console.log("- Read base, V1 and V2 Python files");
+	console.log("- Reading MicroPython files...");
+	const paths = ["pytch", "microbit_v1", "microbit_v2", "universal"].map((p) => resolve(cwd(), p + ".py"));
+	const [base, v1Py, v2Py, uPy] = await Promise.all(paths.map((p) => readFile(p)));
+	console.log("- Read MicroPython files");
 
 	console.log("- Fetching MicroPython firmware...");
 	const [v1Firmware, v2Firmware] = await Promise.all([V1_REPO, V2_REPO].map(downloadLatestRelease));
 	console.log("- Downloaded firmware for V1 and V2 boards");
 
-	console.log("- Assembling hex files...");
+	console.log("- Assembling individual hex files...");
 	const fileSets = [[v1Firmware, v1Py], [v2Firmware, v2Py]] as const;
 	const [v1Hex, v2Hex] = fileSets.map(([fw, py]) => {
 		const fs = new MicropythonFsHex(fw);
@@ -46,12 +46,26 @@ async function main() {
 	});
 	console.log("- Assembled hex files for V1 and V2 boards");
 
+  console.log("- Assembling universal hex file...");
+  const universalFs = new MicropythonFsHex([
+    { hex: v1Firmware, boardId: microbitBoardId.V1 },
+    { hex: v2Firmware, boardId: microbitBoardId.V2 },
+  ]);
+  universalFs.write("pytch.py", base);
+  universalFs.write("microbit_v1.py", v1Py);
+  universalFs.write("microbit_v2.py", v2Py);
+  universalFs.write("main.py", uPy);;
+  const universalHex = universalFs.getUniversalHex();
+	console.log("- Assembled universal hex file");
+
+
 	console.log("- Writing hex files to disk...");
 	const outPath = getBuildOutputDir();
 	await mkdir(outPath, { recursive: true }); // Ensure output dir exists
 	await Promise.all([v1Hex, v2Hex].map((hex, i) => {
 		return writeFile(getHexPath(outPath, i + 1 as BoardVersion), hex);
 	}));
+  await writeFile(getHexPath(outPath, "universal"), universalHex);
 	console.log("- Wrote hex files to " + outPath);
 
 	console.log("Build completed successfully");

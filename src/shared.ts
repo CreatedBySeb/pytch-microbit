@@ -15,8 +15,9 @@ export function getBuildOutputDir(): string {
 /**
  * Get the path to a hex file based on the board version
  * @param hexDir The path to the dir containing the hex files, see {@link getBuildOutputDir}
- * @param version The targetted board version
+ * @param version The targetted board version, or "universal"
  */
-export function getHexPath(hexDir: string, version: BoardVersion): string {
-    return resolve(hexDir, `pytch-microbit-v${version}.hex`);
+export function getHexPath(hexDir: string, version: BoardVersion | "universal"): string {
+    const suffix = (version === "universal") ? version : "v" + version;
+    return resolve(hexDir, `pytch-microbit-${suffix}.hex`);
 }

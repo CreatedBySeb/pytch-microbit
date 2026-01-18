@@ -6,8 +6,9 @@ repository. The MicroPython source exists in the root of the repository, with
 ``pytch.py`` containing the code common to both major board revisions (V1 and
 V2), while device-specific code is contained in ``microbit_v1.py`` or
 ``microbit_v2.py`` respectively, which is renamed to ``main.py`` in the HEX file
-in order to become the entrypoint on boot. The reference for the micro:bit
-version of MicroPython is available
+in order to become the entrypoint on boot. There is also ``universal.py`` which
+is the entry point used for the universal HEX file. The reference for the
+micro:bit version of MicroPython is available
 `here <https://microbit-micropython.readthedocs.io/en/latest/>`_.
 
 The scripts which build the software and enable rapid flashing are located in
@@ -21,7 +22,9 @@ constraint, as the code has to be parsed by the MicroPython interpreter on boot
 and compiled into bytecode. The V2 micro:bit has significantly more memory
 (128KB or 8 times more), and so this is much less of a concern. This is why the
 code in ``pytch.py`` is written more compactly, as it has to be simple enough to
-be parsable on V1 boards.
+be parsable on V1 boards. The V1 micro:bit also has a lower maximum recursion
+depth, which is why the ``pytch.run`` call is made directly in ``universal.py``
+for V1 boards, but the normal ``microbit_v2.py`` entrypoint is imported for V2.
 
 **The V1 version of the firmware is less well tested than V2 and may encounter
 instability due to the lower memory size, it should be considered a work in
@@ -98,11 +101,16 @@ The ``build`` script works by performing the following steps:
 2. Retrieve the latest MicroPython release for each board revision
 3. Combine the base MicroPython HEX file and the MicroPython source into a
    separate HEX file for each revision
-4. Write the HEX files out to the ``build/`` directory as
-   ``pytch-microbit-v{REV}.hex``, where ``{REV}`` is the board major revision
+4. Combine both MicroPython HEX files and the MicroPython source into a
+   universal HEX file for both revisions
+5. Write the HEX files out to the ``build/`` directory as
+   ``pytch-microbit-{VERSION}.hex``, where ``{REV}`` is the version suffix (
+   ``v1``, ``v2`` or ``universal``)
 
 This ensures that the HEX files are always built with the latest available
-version of MicroPython for the board as of the build time.
+version of MicroPython for the board as of the build time. While the universal
+HEX file is more convenient for manual flashing, it is unnecessary for automated
+flashing and is slower which is why both are provided.
 
 The repositories for the different board revisions are:
 
